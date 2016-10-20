@@ -10,7 +10,7 @@ fun <R> future(block:()->R) = Future(block)
 // todo: add test cases!!!!
 class Future<out R> internal constructor(val block:()->R)
 {
-    private var result:()->R = {throw IllegalStateException("uninitialized")}
+    private var result:()->R = {throw IllegalStateException("value is still pending")}
 
     private val releasedOnResultSet = CountDownLatch(1)
 
@@ -47,6 +47,12 @@ class Future<out R> internal constructor(val block:()->R)
     fun await():R
     {
         releasedOnResultSet.await()
+        return result()
+    }
+
+    fun await(timeout:Long):R
+    {
+        releasedOnResultSet.await(timeout,TimeUnit.MILLISECONDS)
         return result()
     }
 
