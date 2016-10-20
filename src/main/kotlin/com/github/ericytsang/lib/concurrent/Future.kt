@@ -3,6 +3,7 @@ package com.github.ericytsang.lib.concurrent
 import com.github.ericytsang.lib.observe.BackedField
 import com.github.ericytsang.lib.observe.Change
 import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
 
 fun <R> future(block:()->R) = Future(block)
