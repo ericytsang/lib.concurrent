@@ -1,5 +1,6 @@
 package com.github.ericytsang.lib.concurrent
 
+import java.io.Closeable
 import java.util.LinkedHashSet
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Semaphore
@@ -8,7 +9,7 @@ import kotlin.concurrent.thread
 /**
  * Created by surpl on 10/21/2016.
  */
-class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreator.DEFAULT_MAX_WAITING_THREAD_COUNT)
+class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreator.DEFAULT_MAX_WAITING_THREAD_COUNT):Closeable
 {
     companion object
     {
@@ -97,7 +98,7 @@ class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreat
      * all preparing threads, and waits for all preparing and working threads to
      * finish before this method returns.
      */
-    fun shutdown() = synchronized(this)
+    override fun close() = synchronized(this)
     {
         threadCreator.interrupt()
         threadCreator.join()
