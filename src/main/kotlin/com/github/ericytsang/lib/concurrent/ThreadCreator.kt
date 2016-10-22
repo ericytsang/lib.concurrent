@@ -9,7 +9,7 @@ import kotlin.concurrent.thread
 /**
  * Created by surpl on 10/21/2016.
  */
-class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreator.DEFAULT_MAX_WAITING_THREAD_COUNT):Closeable
+class ThreadCreator<T>(taskFactory:()->Task<T>,maxWaitingThreadCount:Int = ThreadCreator.DEFAULT_MAX_WAITING_THREAD_COUNT):Closeable
 {
     companion object
     {
@@ -65,10 +65,11 @@ class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreat
                     val task = taskFactory()
 
                     // prepare the thread for the task...
-                    try
+                    val prepared = try
                     {
-                        task.prepare()
+                        val prepared = task.prepare()
                         if (Thread.interrupted()) throw InterruptedException()
+                        prepared
                     }
                     catch (ex:InterruptedException)
                     {
@@ -81,7 +82,7 @@ class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreat
                     }
 
                     // execute the task...
-                    task.work()
+                    task.work(prepared)
                 }
                 finally
                 {
@@ -106,9 +107,9 @@ class ThreadCreator(taskFactory:()->Task,maxWaitingThreadCount:Int = ThreadCreat
         liveWorkerThreads.toSet().forEach {it.join()}
     }
 
-    interface Task
+    interface Task<Prepared>
     {
-        fun prepare()
-        fun work()
+        fun prepare():Prepared
+        fun work(prepared:Prepared)
     }
 }

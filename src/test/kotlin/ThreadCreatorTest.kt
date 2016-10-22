@@ -14,7 +14,7 @@ class ThreadCreatorTest
 
     var workEndCount = 0
 
-    val longPrepareTask = object:ThreadCreator.Task
+    val longPrepareTask = object:ThreadCreator.Task<Unit>
     {
         override fun prepare()
         {
@@ -25,7 +25,7 @@ class ThreadCreatorTest
             println("prepareEndCount++")
         }
 
-        override fun work()
+        override fun work(prepared:Unit)
         {
             synchronized(this@ThreadCreatorTest) {workStartCount++}
             println("workStartCount++")
@@ -35,7 +35,7 @@ class ThreadCreatorTest
         }
     }
 
-    val shortPrepareTask = object:ThreadCreator.Task
+    val shortPrepareTask = object:ThreadCreator.Task<Unit>
     {
         override fun prepare()
         {
@@ -46,7 +46,7 @@ class ThreadCreatorTest
             println("prepareEndCount++")
         }
 
-        override fun work()
+        override fun work(prepared:Unit)
         {
             synchronized(this@ThreadCreatorTest) {workStartCount++}
             println("workStartCount++")
