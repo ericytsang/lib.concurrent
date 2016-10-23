@@ -20,7 +20,7 @@ class ThreadCreatorTest
         {
             synchronized(this@ThreadCreatorTest) {prepareStartCount++}
             println("prepareStartCount++")
-            Thread.sleep(4000)
+            waitLong()
             synchronized(this@ThreadCreatorTest) {prepareEndCount++}
             println("prepareEndCount++")
         }
@@ -29,7 +29,7 @@ class ThreadCreatorTest
         {
             synchronized(this@ThreadCreatorTest) {workStartCount++}
             println("workStartCount++")
-            Thread.sleep(2000)
+            waitShort()
             synchronized(this@ThreadCreatorTest) {workEndCount++}
             println("workEndCount++")
         }
@@ -41,7 +41,7 @@ class ThreadCreatorTest
         {
             synchronized(this@ThreadCreatorTest) {prepareStartCount++}
             println("prepareStartCount++")
-            Thread.sleep(2000)
+            waitShort()
             synchronized(this@ThreadCreatorTest) {prepareEndCount++}
             println("prepareEndCount++")
         }
@@ -50,7 +50,7 @@ class ThreadCreatorTest
         {
             synchronized(this@ThreadCreatorTest) {workStartCount++}
             println("workStartCount++")
-            Thread.sleep(2000)
+            waitShort()
             synchronized(this@ThreadCreatorTest) {workEndCount++}
             println("workEndCount++")
         }
