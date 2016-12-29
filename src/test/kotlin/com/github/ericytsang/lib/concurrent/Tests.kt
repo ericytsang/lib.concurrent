@@ -3,14 +3,15 @@ package com.github.ericytsang.lib.concurrent
 import org.junit.Test
 import java.util.concurrent.ExecutionException
 import kotlin.concurrent.thread
-import kotlin.system.measureTimeMillis
 
 class Tests
 {
     @Test
     fun sleepNoInterruptTest()
     {
-        assert(measureTimeMillis {sleep(1000)} >= 900)
+        val result = sleep(1000)
+        assert(result.sleepDuration >= 900)
+        assert(!result.wasInterrupted)
     }
 
     @Test
@@ -21,7 +22,10 @@ class Tests
             sleep(500)
             mainThread.interrupt()
         }
-        assert(measureTimeMillis {sleep(1000)} <= 600)
+        val result = sleep(1000)
+        assert(result.sleepDuration <= 600)
+        assert(result.wasInterrupted)
+        assert(!Thread.interrupted())
     }
 
     @Test

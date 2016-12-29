@@ -1,5 +1,6 @@
 package com.github.ericytsang.lib.concurrent
 
+import java.io.Serializable
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import kotlin.concurrent.thread
@@ -25,17 +26,22 @@ fun <V> future(
  * milliseconds that passed while sleeping. does not throw
  * [InterruptedException] is interrupted while sleeping.
  */
-fun sleep(timeoutMillis:Long):Long
+fun sleep(timeoutMillis:Long):SleepResult
 {
-    return measureTimeMillis()
+    var wasInterrupted:Boolean = false
+    val sleepDuration = measureTimeMillis()
     {
-        try
+        wasInterrupted = try
         {
             Thread.sleep(timeoutMillis)
+            false
         }
         catch (ex:InterruptedException)
         {
-            // ignore exception
+            true
         }
     }
+    return SleepResult(wasInterrupted,sleepDuration)
 }
+
+data class SleepResult(val wasInterrupted:Boolean,val sleepDuration:Long):Serializable
