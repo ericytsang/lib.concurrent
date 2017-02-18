@@ -1,7 +1,6 @@
 package com.github.ericytsang.lib.concurrent
 
 import java.io.Serializable
-import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import kotlin.concurrent.thread
 import kotlin.system.measureTimeMillis
@@ -10,14 +9,18 @@ import kotlin.system.measureTimeMillis
  * returns a future task that has begun execution right away
  */
 fun <V> future(
+    isThreaded:Boolean = true,
     isDaemon:Boolean = false,
     contextClassLoader:ClassLoader? = null,
     name:String? = null,
     priority:Int = -1,
-    block:()->V):Future<V>
+    block:()->V):FutureTask<V>
 {
     val future = FutureTask(block)
-    thread(true,isDaemon,contextClassLoader,name,priority,{future.run()})
+    if (isThreaded)
+    {
+        thread(true,isDaemon,contextClassLoader,name,priority,{future.run()})
+    }
     return future
 }
 
